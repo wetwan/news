@@ -37,6 +37,7 @@ export const News: NewsType[] = [
   },
 ];
 export const Category = [
+  "all",
   "Local ",
   "National ",
   "International ",
@@ -55,5 +56,5 @@ export const Category = [
   "Lifestyle",
 
   // Deals with topics like fashion, health, food, travel, and relationships.
-  "Science and Technology ",
+  "Science and Technology",
 ];
