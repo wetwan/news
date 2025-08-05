@@ -5,7 +5,7 @@ import Nav from "./components/nav";
 
 function App() {
   return (
-    <div className="p-5">
+    <div className="p-5 w-5/6 mx-auto">
       <Router>
         <Nav />
         <Routes>
