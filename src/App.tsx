@@ -6,8 +6,8 @@ import Nav from "./components/nav";
 function App() {
   return (
     <div className="p-5">
-      <Nav />
       <Router>
+        <Nav />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/news/:id" element={<NewsId />} />

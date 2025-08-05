@@ -1,18 +1,50 @@
-import { images } from "@/assets";
+import { images } from "@/assets"; // Assuming this path is correct for your image assets
+import { NavLink } from "react-router";
 import { Link } from "react-router";
 
 const Nav = () => {
   return (
-    <div className="bg-green-200 py-3 w-full p-1">
-      <Link to="/" className="block w-20, h-20">
-        <img
-          src={images.imgae5}
-          height={70}
-          width={70}
-          className="rounded-full"
-        />
-      </Link>
-    </div>
+    <>
+      <div className="py-3 w-full p-1 flex items-center justify-between">
+        <Link to="/" className="">
+          <img
+            src={images.imgae5}
+            alt="Logo"
+            height={70}
+            width={70}
+            className="rounded-full"
+          />
+        </Link>
+
+        <ul className="flex items-center gap-5 capitalize mr-5">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              ` cursor-pointer py-2  capitalize font-bold transition-colors ease-in duration-300 ${
+                isActive
+                  ? "text-blue-400 border-b-4 border-blue-400 "
+                  : " text-yellow-500"
+              }`
+            }
+          >
+            home
+          </NavLink>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              ` cursor-pointer py-2  capitalize font-bold transition-colors ease-in duration-300 ${
+                isActive
+                  ? "text-blue-400 border-b-4 border-blue-400 "
+                  : " text-yellow-500"
+              }`
+            }
+          >
+            about
+          </NavLink>
+        </ul>
+      </div>
+      <hr className="w-5/6 mx-auto" />
+    </>
   );
 };
 
