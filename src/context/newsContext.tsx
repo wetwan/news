@@ -3,7 +3,13 @@
 
 import { Category, News } from "@/constant";
 import type { NewsType } from "@/types/types";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 type NewsContextType = {
   loading: boolean;
@@ -12,6 +18,13 @@ type NewsContextType = {
   setNews: React.Dispatch<React.SetStateAction<NewsType[]>>;
   category: any[];
   setCategory: React.Dispatch<React.SetStateAction<any[]>>;
+  setCat: React.Dispatch<React.SetStateAction<string>>;
+  cat: string;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  filteredAndSortedNews: NewsType[];
+  filteredByCategory: NewsType[];
+  sortedNews: NewsType[];
 };
 
 const NewsContext = createContext<NewsContextType | undefined>(undefined);
@@ -20,6 +33,8 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState<NewsType[]>([]);
   const [category, setCategory] = useState<any[]>([]);
+  const [cat, setCat] = useState("all");
+  const [search, setSearch] = useState("");
 
   const getNews = async () => {
     setLoading(true);
@@ -31,6 +46,39 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     }
   };
+
+  const filteredByCategory = useMemo(() => {
+    if (cat === "all") {
+      return news; 
+    }
+    return news.filter(
+      (item) => item.category.toLocaleLowerCase() === cat.toLocaleLowerCase()
+    );
+  }, [news, cat]);
+  const sortedNews = useMemo(() => {
+  
+    return [...filteredByCategory].sort((a, b) => {
+    
+      const timeA = a.time?.seconds ?? 0;
+      const timeB = b.time?.seconds ?? 0;
+      return timeB - timeA; 
+    });
+  }, [filteredByCategory]); 
+
+
+  const filteredAndSortedNews = useMemo(() => {
+    if (!search) {
+      return sortedNews; 
+    }
+    const lowercasedSearch = search.toLowerCase();
+    return sortedNews.filter((item) => {
+      const titleMatches = item.title.toLowerCase().includes(lowercasedSearch);
+      const categoryMatches = item.category
+        .toLowerCase()
+        .includes(lowercasedSearch);
+      return titleMatches || categoryMatches;
+    });
+  }, [sortedNews, search]);
 
   const getCategory = async () => {
     setLoading(true);
@@ -51,6 +99,13 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
   return (
     <NewsContext.Provider
       value={{
+        filteredAndSortedNews,
+        filteredByCategory,
+        sortedNews,
+        setSearch,
+        search,
+        setCat,
+        cat,
         loading,
         setLoading,
         news,

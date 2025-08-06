@@ -9,13 +9,13 @@ import { useParams } from "react-router";
 
 const Tag = () => {
   const { id } = useParams();
-  const { news, loading, setLoading } = useNewsCreation();
+  const { filteredAndSortedNews, loading, setLoading } = useNewsCreation();
   const [tags, setNewsdata] = useState<NewsType[]>([]);
 
   const getTags = async () => {
     setLoading(true);
     try {
-      const filter = news.filter(
+      const filter = filteredAndSortedNews.filter(
         (newsItem) => newsItem.tag.includes(id as string) // Type assertion here
       );
       setNewsdata(filter);
@@ -27,7 +27,7 @@ const Tag = () => {
   };
   useEffect(() => {
     getTags();
-  }, [news]);
+  }, [filteredAndSortedNews]);
 
   if (loading) {
     return (

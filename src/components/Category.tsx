@@ -1,9 +1,8 @@
 import { useNewsCreation } from "@/context/newsContext";
-import { useState } from "react";
 
 const Category = () => {
-  const { category } = useNewsCreation();
-  const [cat, setCat] = useState("all");
+  const { category, cat, setCat } = useNewsCreation();
+  // const [cat, setCat] = useState("all");
   return (
     <div>
       <div className="flex gap-3 w-5/6 mx-auto overflow-x-scroll mt-10">

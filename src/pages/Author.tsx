@@ -8,13 +8,13 @@ import { useParams } from "react-router";
 
 const Author = () => {
   const { id } = useParams();
-  const { news, loading, setLoading } = useNewsCreation();
+  const { filteredAndSortedNews, loading, setLoading } = useNewsCreation();
   const [author, setNewsdata] = useState<NewsType[]>([]);
 
   const getAuthor = async () => {
     setLoading(true);
     try {
-      const find = news.filter((t) => t.by === id);
+      const find = filteredAndSortedNews.filter((t) => t.by === id);
       setNewsdata(find);
     } catch (error) {
       console.log("error:", error);
@@ -25,7 +25,7 @@ const Author = () => {
 
   useEffect(() => {
     getAuthor();
-  }, [news]);
+  }, [filteredAndSortedNews]);
 
   console.log(author);
   if (loading) {

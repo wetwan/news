@@ -1,12 +1,14 @@
 import { images } from "@/assets"; // Assuming this path is correct for your image assets
+import { useNewsCreation } from "@/context/newsContext";
 import { NavLink } from "react-router";
 import { Link } from "react-router";
 
 const Nav = () => {
+  const { setCat } = useNewsCreation();
   return (
     <>
       <div className="py-3 w-full p-1 flex items-center justify-between">
-        <Link to="/" className="">
+        <Link to="/" className="" onClick={() => setCat("all")}>
           <img
             src={images.imgae5}
             alt="Logo"

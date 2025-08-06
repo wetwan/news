@@ -16,10 +16,10 @@ export const News: NewsType[] = [
   {
     story:
       "Cloudinary is a SaaS company providing cloud media management services for websites and apps. The company is headquartered in San Jose, California with offices in Israel, England, Poland, and Singapore.",
-    title: "Cloudinary",
+    title: "ronaldo",
     by: "wetwan",
     time: { seconds: 5679876, nanoseconds: 45678987654 },
-    category: "sport",
+    category: "sports",
     id: "2",
     tag: ["ronaldo", "nigeria", "club"],
     image: images.imgae2,
@@ -56,5 +56,6 @@ export const Category = [
   "Lifestyle",
 
   // Deals with topics like fashion, health, food, travel, and relationships.
-  "Science and Technology",
+  "Science ",
+  "Technology",
 ];
