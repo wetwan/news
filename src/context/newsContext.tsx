@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 
-import { Category, News } from "@/contant";
+import { Category, News } from "@/constant";
 import type { NewsType } from "@/types/types";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -17,7 +17,7 @@ type NewsContextType = {
 const NewsContext = createContext<NewsContextType | undefined>(undefined);
 
 export function NewsProvider({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [news, setNews] = useState<NewsType[]>([]);
   const [category, setCategory] = useState<any[]>([]);
 
@@ -32,8 +32,6 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  console.log("news:", news);
-  console.log("category", category);
   const getCategory = async () => {
     setLoading(true);
     try {

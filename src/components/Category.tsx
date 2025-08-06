@@ -1,4 +1,4 @@
-import { useNewsCreation } from "@/contest/newsContext";
+import { useNewsCreation } from "@/context/newsContext";
 import { useState } from "react";
 
 const Category = () => {
@@ -12,7 +12,9 @@ const Category = () => {
             key={i}
             onClick={() => setCat(item)}
             className={`border whitespace-nowrap px-5 py-2 capitalize rounded-xl cursor-pointer ${
-              item === cat ? "text-blue-400 font-bold border-blue-400" : "font-semibold"
+              item === cat
+                ? "text-blue-400 font-bold border-blue-400"
+                : "font-semibold"
             }`}
           >
             {item}

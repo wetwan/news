@@ -1,4 +1,5 @@
 import Category from "@/components/Category";
+import News from "@/components/News";
 import SearchBox from "@/components/searchBox";
 
 const Home = () => {
@@ -6,6 +7,7 @@ const Home = () => {
     <div>
       <SearchBox />
       <Category />
+      <News />
     </div>
   );
 };

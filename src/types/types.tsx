@@ -3,12 +3,11 @@ export interface NewsType {
   title: string;
   by: string;
   time: {
-    seconds?: number;
-    nanoseconds?: number;
+    seconds: number;
+    nanoseconds: number;
   };
   category: string;
   id: string;
   tag: string[];
   image: string;
-  
 }
