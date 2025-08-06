@@ -32,7 +32,7 @@ const Nav = () => {
             home
           </NavLink>
           <NavLink
-            to="/about"
+            to="/login"
             className={({ isActive }) =>
               ` cursor-pointer py-2  capitalize font-bold transition-colors ease-in duration-300 ${
                 isActive
@@ -41,7 +41,7 @@ const Nav = () => {
               }`
             }
           >
-            about
+            login
           </NavLink>
         </ul>
       </div>

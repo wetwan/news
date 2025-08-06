@@ -5,7 +5,7 @@ import { useNewsCreation } from "@/context/newsContext";
 const SearchBox = () => {
   const { search, setSearch } = useNewsCreation();
   return (
-    <div className="mt-10 mx-auto max-w-4/6 border py-3 p-2 rounded-4xl  flex items-center justify-between ">
+    <div className="mt-10 mx-auto sm-max-w-4/6 border py-3 p-2 rounded-4xl  flex items-center justify-between ">
       <input
         type="text"
         value={search}

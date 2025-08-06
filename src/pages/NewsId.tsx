@@ -2,7 +2,6 @@
 import { images } from "@/assets";
 import Comments from "@/components/Coments";
 import Comment from "@/components/comment";
-
 import { useNewsCreation } from "@/context/newsContext";
 import type { CommentType, NewsType } from "@/types/types";
 import { Loader2Icon } from "lucide-react";
@@ -54,7 +53,7 @@ const NewsId = () => {
     );
   }
   return (
-    <div className="mt-20 w-5/6 mx-auto ">
+    <div className="mt-20 sm:w-5/6 mx-auto ">
       <h1 className="font-extrabold text-5xl capitalize my-4">
         {newData?.title}
       </h1>
@@ -81,7 +80,7 @@ const NewsId = () => {
         </div>
       </div>
       <div className="mt-20">
-        <div className="h-[400px] sm:w-[600px] w-[300px] overflow-hidden mb-10">
+        <div className="h-[400px] sm:w-[600px] w-[290px] overflow-hidden mb-10">
           <img src={newData?.image} className="h-[400px] w-full" />
         </div>
 
