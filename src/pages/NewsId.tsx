@@ -1,15 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { images } from "@/assets";
+import Comments from "@/components/Coments";
+import Comment from "@/components/comment";
+
 import { useNewsCreation } from "@/context/newsContext";
-import type { NewsType } from "@/types/types";
+import type { CommentType, NewsType } from "@/types/types";
 import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 
 const NewsId = () => {
   const { id } = useParams();
-  const { news, loading, setLoading } = useNewsCreation();
+  const { news, loading, setLoading, comment } = useNewsCreation();
   const [newData, setNewsdata] = useState<NewsType>();
+  const [comm, setComm] = useState<CommentType[]>([]);
 
   const getNewdata = async () => {
     setLoading(true);
@@ -22,9 +26,21 @@ const NewsId = () => {
       setLoading(false);
     }
   };
+  const getComment = async () => {
+    setLoading(true);
+    try {
+      const find = comment.filter((t) => t.postId === id);
+      setComm(find);
+    } catch (error) {
+      console.log("error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getNewdata();
+    getComment();
   }, [news]);
 
   if (loading) {
@@ -65,7 +81,7 @@ const NewsId = () => {
         </div>
       </div>
       <div className="mt-20">
-        <div className="h-[400px] w-[600px] overflow-hidden mb-10">
+        <div className="h-[400px] sm:w-[600px] w-[300px] overflow-hidden mb-10">
           <img src={newData?.image} className="h-[400px] w-full" />
         </div>
 
@@ -84,6 +100,12 @@ const NewsId = () => {
             </Link>
           ))}
         </div>
+      </div>
+      <hr className="mt-10 bg-black" />
+      <div className="mt-10">
+        <h2 className="text-3xl font-bold mb-3">Comment</h2>
+        <Comments />
+        <Comment item={comm} />
       </div>
     </div>
   );

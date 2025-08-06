@@ -11,3 +11,16 @@ export interface NewsType {
   tag: string[];
   image: string;
 }
+
+export interface CommentType {
+  name: string;
+  email: string;
+  time: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  image: string;
+  Comment: string;
+  postId: string;
+  id: string;
+}

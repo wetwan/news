@@ -12,7 +12,7 @@ const Item = ({ item }: ItemProp) => {
       className="p-3 border overflow-hidden hover:scale-105 ease-in duration-500 hover:mx-1 rounded-xl hover:border-blue-300 "
     >
       <Link
-        to={`news/${item.id}`}
+        to={`/news/${item.id}`}
         className="w-[300px] lg:w-[400px] h-[300px] overflow-hidden object-center items-center"
       >
         <img src={item.image} className=" object-cover w-full h-[300px]" />
