@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
-
-import { Category } from "@/constant";
 import { account, config, db } from "@/lib/apprwrite";
 import type { CommentType, NewsDocument } from "@/types/types";
 import { Query, type Models } from "appwrite";
@@ -16,6 +14,7 @@ import { toast } from "react-toastify";
 
 type NewsContextType = {
   getMessage: () => Promise<void>;
+  getCategory: () => Promise<void>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   news: NewsDocument[];
@@ -107,9 +106,16 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
   const getCategory = async () => {
     setLoading(true);
     try {
-      setCategory(Category);
+      const response = await db.listDocuments(
+        config.database,
+        config.category,
+        []
+      );
+      if (response.documents) {
+        setCategory(response.documents);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching category:", error);
     } finally {
       setLoading(false);
     }
@@ -124,7 +130,6 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
         Query.orderDesc("time"),
       ]);
       setAdminNews(response.documents as unknown as NewsDocument[]);
-
     } catch (error) {
       console.error("Error fetching message:", error);
       toast.error("Failed to fetch message. Please try again later.");
@@ -164,6 +169,7 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
         setComment,
         user,
         setUser,
+        getCategory,
       }}
     >
       {children}

@@ -8,6 +8,7 @@ export const config = {
     news: import.meta.env.VITE_APPWRITE_NEWS_ID!,
     bucket: import.meta.env.VITE_APPWRITE_BUCKET_ID!,
     comment: import.meta.env.VITE_APPWRITE_COMMENT_ID!,
+    category: import.meta.env.VITE_APPWRITE_CATEGORY_ID!,
 
 };
 

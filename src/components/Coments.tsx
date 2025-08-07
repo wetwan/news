@@ -28,9 +28,6 @@ const Comments = ({ item, getComment }: Comment) => {
     }
     setLoading(true);
     try {
-      // Get current user
-
-      // Prepare final form data
       const formdata = {
         name: name,
         comment: comment,
