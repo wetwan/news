@@ -3,7 +3,7 @@ import { images } from "@/assets";
 import Comments from "@/components/Coments";
 import Comment from "@/components/comment";
 import { useNewsCreation } from "@/context/newsContext";
-import type { CommentType, NewsType } from "@/types/types";
+import type { CommentType, NewsDocument } from "@/types/types";
 import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
@@ -11,13 +11,13 @@ import { Link, useParams } from "react-router";
 const NewsId = () => {
   const { id } = useParams();
   const { news, loading, setLoading, comment } = useNewsCreation();
-  const [newData, setNewsdata] = useState<NewsType>();
+  const [newData, setNewsdata] = useState<NewsDocument>();
   const [comm, setComm] = useState<CommentType[]>([]);
 
   const getNewdata = async () => {
     setLoading(true);
     try {
-      const find = news.find((t) => t.id === id);
+      const find = news.find((t) => t.$id === id);
       setNewsdata(find);
     } catch (error) {
       console.log("error:", error);
@@ -73,9 +73,7 @@ const NewsId = () => {
             by: {newData?.by}
           </Link>
           <p className=" capitalize text-md font-bold">
-            date:{" "}
-            {newData?.time &&
-              new Date(newData.time.seconds * 1000).toLocaleString()}
+            date: {newData?.time && new Date(newData.time).toLocaleString()}
           </p>
         </div>
       </div>

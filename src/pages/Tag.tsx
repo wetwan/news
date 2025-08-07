@@ -2,7 +2,7 @@
 
 import Item from "@/components/OnNews";
 import { useNewsCreation } from "@/context/newsContext";
-import type { NewsType } from "@/types/types";
+import type { NewsDocument } from "@/types/types";
 import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
@@ -10,7 +10,7 @@ import { useParams } from "react-router";
 const Tag = () => {
   const { id } = useParams();
   const { filteredAndSortedNews, loading, setLoading } = useNewsCreation();
-  const [tags, setNewsdata] = useState<NewsType[]>([]);
+  const [tags, setNewsdata] = useState<NewsDocument[]>([]);
 
   const getTags = async () => {
     setLoading(true);
@@ -45,8 +45,8 @@ const Tag = () => {
         Tag: <span className="uppercase  font-bold text-blue-400">{id}</span>
       </h1>
       <div className="grid lg:grid-cols-3 xl:grid-cols-4 sm:grid-cols-2 gap-4 items-center justify-between">
-        {tags.map((item: NewsType) => (
-          <Item item={item} key={item.id} />
+        {tags.map((item: NewsDocument) => (
+          <Item item={item} key={item.$id} />
         ))}
       </div>
     </div>

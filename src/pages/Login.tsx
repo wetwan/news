@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNewsCreation } from "@/context/newsContext";
 import { loginUser } from "@/lib/apprwrite";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -21,10 +22,11 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setUser } = useNewsCreation();
+  const { setUser, setLoading, loading } = useNewsCreation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const user = await loginUser(email, password);
       toast.success("Login successful!");
@@ -32,7 +34,9 @@ const Login = () => {
       setUser(user);
     } catch (err) {
       console.log(err);
-      toast.error("Login failed. Please check your credentials.");
+      toast.error("Login failed." + err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,9 +79,16 @@ const Login = () => {
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
+          {loading && (
+            <Button type="submit" className="w-full">
+              <Loader className=" animate-spin" />
+            </Button>
+          )}
+          {!loading && (
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </form>

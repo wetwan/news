@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 
-import { Category, Comment, News } from "@/constant";
-import { account } from "@/lib/apprwrite";
-import type { CommentType, NewsType } from "@/types/types";
-import type { Models } from "appwrite";
+import { Category, Comment } from "@/constant";
+import { account, config, db } from "@/lib/apprwrite";
+import type { CommentType, NewsDocument } from "@/types/types";
+import { Query, type Models } from "appwrite";
 import React, {
   createContext,
   useContext,
@@ -12,27 +12,30 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { toast } from "react-toastify";
 
 type NewsContextType = {
+  getMessage: () => Promise<void>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  news: NewsType[];
-  setNews: React.Dispatch<React.SetStateAction<NewsType[]>>;
+  news: NewsDocument[];
+  setNews: React.Dispatch<React.SetStateAction<NewsDocument[]>>;
   category: any[];
   setCategory: React.Dispatch<React.SetStateAction<any[]>>;
   setCat: React.Dispatch<React.SetStateAction<string>>;
   cat: string;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
-  filteredAndSortedNews: NewsType[];
-  filteredByCategory: NewsType[];
-  sortedNews: NewsType[];
+  filteredAndSortedNews: NewsDocument[];
+  filteredByCategory: NewsDocument[];
   comment: CommentType[];
   setComment: React.Dispatch<React.SetStateAction<CommentType[]>>;
   user: Models.User<Record<string, any>> | null;
   setUser: React.Dispatch<
     React.SetStateAction<Models.User<Record<string, any>> | null>
   >;
+  AdminNews: NewsDocument[];
+  setAdminNews: React.Dispatch<React.SetStateAction<NewsDocument[]>>;
 };
 
 const NewsContext = createContext<NewsContextType | undefined>(undefined);
@@ -40,7 +43,7 @@ const NewsContext = createContext<NewsContextType | undefined>(undefined);
 export function NewsProvider({ children }: { children: React.ReactNode }) {
   // const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [news, setNews] = useState<NewsType[]>([]);
+  const [news, setNews] = useState<NewsDocument[]>([]);
   const [comment, setComment] = useState<CommentType[]>([]);
   const [category, setCategory] = useState<any[]>([]);
   const [cat, setCat] = useState("all");
@@ -48,7 +51,7 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Models.User<Record<string, any>> | null>(
     null
   );
-
+  const [AdminNews, setAdminNews] = useState<NewsDocument[]>([]);
   const checkUser = async () => {
     try {
       const loggedInUser = await account.get();
@@ -68,7 +71,10 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
   const getNews = async () => {
     setLoading(true);
     try {
-      setNews(News);
+      const response = await db.listDocuments(config.database, config.news, [
+        Query.orderDesc("time"),
+      ]);
+      setNews(response.documents as unknown as NewsDocument[]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -94,27 +100,19 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
       (item) => item.category.toLocaleLowerCase() === cat.toLocaleLowerCase()
     );
   }, [news, cat]);
-  const sortedNews = useMemo(() => {
-    return [...filteredByCategory].sort((a, b) => {
-      const timeA = a.time?.seconds ?? 0;
-      const timeB = b.time?.seconds ?? 0;
-      return timeB - timeA;
-    });
-  }, [filteredByCategory]);
-
   const filteredAndSortedNews = useMemo(() => {
     if (!search) {
-      return sortedNews;
+      return filteredByCategory;
     }
     const lowercasedSearch = search.toLowerCase();
-    return sortedNews.filter((item) => {
+    return filteredByCategory.filter((item) => {
       const titleMatches = item.title.toLowerCase().includes(lowercasedSearch);
       const categoryMatches = item.category
         .toLowerCase()
         .includes(lowercasedSearch);
       return titleMatches || categoryMatches;
     });
-  }, [sortedNews, search]);
+  }, [filteredByCategory, search]);
 
   const getCategory = async () => {
     setLoading(true);
@@ -127,6 +125,31 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const getMessage = async () => {
+    setLoading(true);
+    try {
+      const currentUser = await account.get();
+      const response = await db.listDocuments(config.database, config.news, [
+        Query.equal("by", currentUser.name),
+        Query.orderDesc("time"),
+      ]);
+      setAdminNews(response.documents as unknown as NewsDocument[]);
+
+      if (response.documents.length === 0) {
+        toast.info("No news found for the current user.");
+      }
+    } catch (error) {
+      console.error("Error fetching message:", error);
+      toast.error("Failed to fetch message. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getMessage();
+  }, []);
+
   useEffect(() => {
     getComment();
     getNews();
@@ -136,9 +159,11 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
   return (
     <NewsContext.Provider
       value={{
+        getMessage,
+        AdminNews,
+        setAdminNews,
         filteredAndSortedNews,
         filteredByCategory,
-        sortedNews,
         setSearch,
         search,
         setCat,

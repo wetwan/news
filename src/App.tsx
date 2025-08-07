@@ -71,7 +71,7 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<AdminHome />} />{" "}
+            <Route index element={<AdminHome />} />
             <Route path="addnews" element={<AddNews />} />
             <Route path="adduser" element={<Addadmin />} />
             <Route path="user" element={<Profile />} />

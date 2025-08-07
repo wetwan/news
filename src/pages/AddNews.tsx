@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,11 +9,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNewsCreation } from "@/context/newsContext";
+import { account, avatar, config, db, storage } from "@/lib/apprwrite";
+import { ID } from "appwrite";
+import { Loader } from "lucide-react";
 import Quill from "quill";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 const AddNews = () => {
-  const { category } = useNewsCreation();
+  const { category, loading, setLoading, getMessage } = useNewsCreation();
+  const naviagte = useNavigate();
   const editorRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<Quill | null>(null);
   const [currentTagInput, setCurrentTagInput] = useState<string>("");
@@ -54,16 +59,67 @@ const AddNews = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formdata = {
-      title: title,
-      date: Date.now(),
-      image: image,
-      tag: tagsList,
-      description: newsDescription,
-      category: selectedCategory,
-    };
-    console.log("Form submitted", formdata);
+    if (!title || !newsDescription || !selectedCategory || !image) {
+      toast("Please fill all fields");
+      return;
+    }
+    setLoading(true);
+    try {
+      // Get current user
+      const currentUser = await account.get();
+
+      // Generate initials avatar
+      const userAvatar = avatar.getInitials(currentUser.name);
+
+      // Upload image to storage
+      const file = await storage.createFile(config.bucket, ID.unique(), image);
+      if (!file) {
+        toast("Failed to upload image");
+        return;
+      }
+
+      // Get preview image URL
+      const imageUrl = storage
+        .getFileView(config.bucket, file.$id)
+    
+
+      // Prepare final form data
+      const formdata = {
+        title: title,
+        story: newsDescription,
+        category: selectedCategory,
+        tag: tagsList,
+        image: imageUrl,
+        by: currentUser.name,
+        time: new Date().toISOString(),
+        aurthor_image: userAvatar,
+      };
+
+      await db.createDocument(
+        config.database,
+        config.news,
+        ID.unique(),
+        formdata
+      );
+
+      toast("News added successfully");
+
+      await getMessage();
+      naviagte("/admin");
+
+      setTitle("");
+      setNewsDescription("");
+      setSelectedCategory("");
+      setImage(null);
+      setTagsList([]);
+    } catch (error) {
+      console.error("Error adding news:", error);
+      toast("Failed to add news");
+    } finally {
+      setLoading(false);
+    }
   };
+
   useEffect(() => {
     let quill: Quill;
 
@@ -140,7 +196,7 @@ const AddNews = () => {
           onValueChange={(t) => setSelectedCategory(t)}
         >
           <SelectTrigger className="focus-within:ring-0 border-blue-400 focus-within:border-blue-500 max-w-[250px] py-5">
-            <SelectValue placeholder="Select a category" />{" "}
+            <SelectValue placeholder="Select a category" />
             {/* Placeholder is sufficient here */}
           </SelectTrigger>
           <SelectContent className="focus-within:ring-0 border-blue-400 focus-within:border-blue-500 max-w-[250px] py-5">
@@ -206,7 +262,16 @@ const AddNews = () => {
           ))}
         </div>
       </div>
-      <Button type="submit"> Submit</Button>
+      {loading && (
+        <Button type="submit" className="w-full">
+          <Loader className=" animate-spin" />
+        </Button>
+      )}
+      {!loading && (
+        <Button type="submit" className="w-full">
+          Add News
+        </Button>
+      )}
     </form>
   );
 };

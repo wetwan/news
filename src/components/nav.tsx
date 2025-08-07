@@ -69,6 +69,20 @@ const Nav = () => {
               login
             </NavLink>
           )}
+          {user && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                ` cursor-pointer py-2  capitalize font-bold transition-colors ease-in duration-300 ${
+                  isActive
+                    ? "text-blue-400 border-b-4 border-blue-400 "
+                    : " text-yellow-500"
+                }`
+              }
+            >
+              admin
+            </NavLink>
+          )}
         </ul>
       </div>
       <hr className="w-5/6 mx-auto" />
