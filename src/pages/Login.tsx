@@ -19,8 +19,8 @@ import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("wetwan080@gmail.com");
+  const [password, setPassword] = useState("hbV?LVcC_Z7t.x!");
 
   const { setUser, setLoading, loading } = useNewsCreation();
 
