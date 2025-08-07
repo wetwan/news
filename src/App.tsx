@@ -18,6 +18,7 @@ import Profile from "./pages/Profile";
 import "quill/dist/quill.snow.css";
 import { useEffect, useState, type ReactNode } from "react";
 import { account } from "./lib/apprwrite";
+import { ToastContainer } from "react-toastify";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -52,6 +53,7 @@ function App() {
 
   return (
     <div className="p-5 sm:w-5/6 mx-auto">
+      <ToastContainer />
       <Router>
         <Nav />
         <Routes>

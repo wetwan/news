@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { createUser } from "@/lib/apprwrite";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Addadmin = () => {
   const [email, setEmail] = useState("");
@@ -31,10 +32,10 @@ const Addadmin = () => {
     e.preventDefault();
     try {
       await createUser(email, password, name, role);
-      alert("User created! Now log in.");
+      toast.success("User created! Now log in.");
     } catch (err) {
       console.log(err);
-      alert("Registration failed");
+      toast.error("Registration failed");
     }
   };
 

@@ -3,6 +3,7 @@ import { useNewsCreation } from "@/context/newsContext";
 import { signOut } from "@/lib/apprwrite";
 import { NavLink, useNavigate } from "react-router";
 import { Link } from "react-router";
+import { toast } from "react-toastify";
 
 const Nav = () => {
   const { setCat, user, setUser } = useNewsCreation();
@@ -11,6 +12,7 @@ const Nav = () => {
   const logOut = async () => {
     try {
       await signOut();
+      toast.success("Logged out successfully!");
       setUser(null);
       navigate("/");
     } catch (error) {

@@ -13,6 +13,7 @@ import { useNewsCreation } from "@/context/newsContext";
 import { loginUser } from "@/lib/apprwrite";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,12 +27,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const user = await loginUser(email, password);
-      alert("Login successful!");
+      toast.success("Login successful!");
       navigate("/admin");
       setUser(user);
     } catch (err) {
       console.log(err);
-      alert("Login failed. Please check your credentials.");
+      toast.error("Login failed. Please check your credentials.");
     }
   };
 

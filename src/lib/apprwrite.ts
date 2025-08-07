@@ -1,10 +1,11 @@
 
-import { Client, Account, Databases, ID } from "appwrite";
+import { Client, Account, Databases, ID, Avatars } from "appwrite";
 
 
 export const config = {
     database: import.meta.env.VITE_APPWRITE_DATABASE_ID!,
     user: import.meta.env.VITE_APPWRITE_USER_ID!,
+    news: import.meta.env.VITE_APPWRITE_NEWS_ID!,
 };
 
 
@@ -17,7 +18,7 @@ const client = new Client()
 
 export const account = new Account(client);
 export const db = new Databases(client);
-
+export const avatar = new Avatars(client);
 export { client };
 
 
@@ -48,6 +49,8 @@ export const loginUser = async (email: string, password: string) => {
     }
 };
 
+
+
 export const signOut = async () => {
     try {
         await account.deleteSession("current");
@@ -58,3 +61,22 @@ export const signOut = async () => {
         return false; // Still returns false for failure
     }
 };
+
+export const addNews = async () => {
+    try {
+        const currentUser = await account.get();
+        const userAvatar = avatar.getInitials(currentUser.name);
+        await db.createDocument(config.database, config.news, ID.unique(), {
+            title: "",
+            story: "",
+            by: currentUser.name,
+            category: '',
+            tag: [],
+            time: new Date().toISOString(),
+            image: "",
+            aurthor_image: userAvatar
+        });
+    } catch (error) {
+        console.log("Error adding news:", error);
+    }
+}
