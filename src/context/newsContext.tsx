@@ -2,7 +2,9 @@
 /* eslint-disable react-refresh/only-export-components */
 
 import { Category, Comment, News } from "@/constant";
+import { account } from "@/lib/apprwrite";
 import type { CommentType, NewsType } from "@/types/types";
+import type { Models } from "appwrite";
 import React, {
   createContext,
   useContext,
@@ -27,17 +29,41 @@ type NewsContextType = {
   sortedNews: NewsType[];
   comment: CommentType[];
   setComment: React.Dispatch<React.SetStateAction<CommentType[]>>;
+  user: Models.User<Record<string, any>> | null;
+  setUser: React.Dispatch<
+    React.SetStateAction<Models.User<Record<string, any>> | null>
+  >;
 };
 
 const NewsContext = createContext<NewsContextType | undefined>(undefined);
 
 export function NewsProvider({ children }: { children: React.ReactNode }) {
+  // const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState<NewsType[]>([]);
   const [comment, setComment] = useState<CommentType[]>([]);
   const [category, setCategory] = useState<any[]>([]);
   const [cat, setCat] = useState("all");
   const [search, setSearch] = useState("");
+  const [user, setUser] = useState<Models.User<Record<string, any>> | null>(
+    null
+  );
+
+  const checkUser = async () => {
+    try {
+      const loggedInUser = await account.get();
+      setUser(loggedInUser);
+    } catch (error) {
+      console.log("Not authenticated", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    checkUser();
+  }, []);
 
   const getNews = async () => {
     setLoading(true);
@@ -123,7 +149,10 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
         setCategory,
         setNews,
         category,
-        comment, setComment
+        comment,
+        setComment,
+        user,
+        setUser,
       }}
     >
       {children}

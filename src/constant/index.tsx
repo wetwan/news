@@ -38,25 +38,18 @@ export const News: NewsType[] = [
 ];
 export const Category = [
   "all",
-  "Local ",
-  "National ",
-  "International ",
+  "Local",
+  "National",
+  "International",
   "Business",
   "Sports",
   "Weather",
   "Entertainment",
-  // Features stories about movies, music, television, celebrities, and other forms of entertainment.
-
   "Political",
-  //  Focuses on government, politicians, elections, and political campaigns.
   "Investigative",
-  // Journalism Involves in-depth reporting on issues, often uncovering wrongdoing or hidden information.
   "Crime",
-  //  Covers criminal activity, law enforcement, and court proceedings.
   "Lifestyle",
-
-  // Deals with topics like fashion, health, food, travel, and relationships.
-  "Science ",
+  "Science",
   "Technology",
 ];
 

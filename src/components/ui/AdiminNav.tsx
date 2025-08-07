@@ -3,14 +3,14 @@ import { NavLink } from "react-router";
 const AdiminNav = () => {
   return (
     <div>
-      <ul className="flex items-center gap-5 capitalize mr-5 justify-center m-10">
+      <ul className="flex items-center gap-5 capitalize justify-center my-10 max-sm:text-sm overflow-scroll w-full">
         <NavLink
           to="/admin"
           className={({ isActive }) =>
             `cursor-pointer py-2 capitalize font-bold transition-colors ease-in duration-300 ${
               isActive
-                ? "text-blue-600 border-b-4 border-blue-600 " // Used a more standard blue color
-                : "text-gray-600 hover:text-gray-800" // Changed inactive color for better contrast
+                ? "text-blue-600 border-b-4 border-blue-600 " // Used a more
+                : " text-yellow-500" // Changed inactive color
             }`
           }
           end

@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router";
 import Home from "./pages/Home";
 import NewsId from "./pages/NewsId";
 import Nav from "./components/nav";
@@ -10,23 +15,40 @@ import AdminHome from "./pages/AdminHome";
 import AddNews from "./pages/AddNews";
 import Addadmin from "./pages/Addadmin";
 import Profile from "./pages/Profile";
+import "quill/dist/quill.snow.css";
+import { useEffect, useState, type ReactNode } from "react";
+import { account } from "./lib/apprwrite";
+
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
 
 function App() {
-  // const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  //   const { isSignedIn, isLoaded } = useAuth();
-  //   const navigate = useNavigate();
+  const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+    const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
+      null
+    );
 
-  //   useEffect(() => {
-  //     if (isLoaded && !isSignedIn) {
-  //       navigate("/login");
-  //     }
-  //   }, [isLoaded, isSignedIn, navigate]);
+    useEffect(() => {
+      const checkUser = async () => {
+        try {
+          await account.get(); // This will throw if not authenticated
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.log("Not authenticated", error);
+          setIsAuthenticated(false);
+          navigate("/login");
+        }
+      };
 
-  //   if (!isLoaded) return null;
-  //   if (!isSignedIn) return null;
+      checkUser();
+    }, [navigate]);
 
-  //   return <>{children}</>;
-  // };
+    if (isAuthenticated === null) return null; // Or show a loader
+
+    return <>{children}</>;
+  };
 
   return (
     <div className="p-5 sm:w-5/6 mx-auto">
@@ -39,7 +61,14 @@ function App() {
           <Route path="/tag/:id" element={<Tag />} />
           <Route path="/author/:id" element={<Author />} />
 
-          <Route path="/admin" element={<Admin />}>
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<AdminHome />} />{" "}
             <Route path="addnews" element={<AddNews />} />
             <Route path="adduser" element={<Addadmin />} />
