@@ -5,6 +5,18 @@ import { Trash } from "lucide-react";
 import { toast } from "react-toastify";
 import { config, db } from "@/lib/apprwrite";
 import { useNewsCreation } from "@/context/newsContext";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 interface AdminNewsProps {
   item: NewsDocument;
@@ -12,6 +24,8 @@ interface AdminNewsProps {
 
 const AdminNew = ({ item }: AdminNewsProps) => {
   const { getMessage } = useNewsCreation();
+
+  const [open, setOpen] = useState(false);
   const handleDelete = async (item: NewsDocument) => {
     try {
       // Assuming you have a function to delete news by ID
@@ -48,12 +62,32 @@ const AdminNew = ({ item }: AdminNewsProps) => {
       </p>
       <h3 className="">{item.story.slice(0, 70)}....</h3>
 
-      <Button
-        className="mt-3 bg-red-500 hover:bg-red-600 text-white absolute bottom-3 right-1"
-        onClick={() => handleDelete(item)}
-      >
-        <Trash />
-      </Button>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogTrigger asChild>
+          <Button
+            className="mt-3 bg-red-500 hover:bg-red-600 text-white absolute bottom-3 right-1"
+            onClick={() => setOpen(true)}
+          >
+            <Trash />
+          </Button>
+        </AlertDialogTrigger>
+
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this news item. This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleDelete(item)}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

@@ -27,7 +27,6 @@ const Author = () => {
     getAuthor();
   }, [filteredAndSortedNews]);
 
-  console.log(author);
   if (loading) {
     return (
       <div className="h-screen flex justify-center items-center">

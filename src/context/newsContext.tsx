@@ -41,7 +41,6 @@ type NewsContextType = {
 const NewsContext = createContext<NewsContextType | undefined>(undefined);
 
 export function NewsProvider({ children }: { children: React.ReactNode }) {
-  // const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState<NewsDocument[]>([]);
   const [comment, setComment] = useState<CommentType[]>([]);

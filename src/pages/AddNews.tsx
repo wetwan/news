@@ -65,25 +65,17 @@ const AddNews = () => {
     }
     setLoading(true);
     try {
-      // Get current user
       const currentUser = await account.get();
 
-      // Generate initials avatar
       const userAvatar = avatar.getInitials(currentUser.name);
 
-      // Upload image to storage
       const file = await storage.createFile(config.bucket, ID.unique(), image);
       if (!file) {
         toast("Failed to upload image");
         return;
       }
+      const imageUrl = storage.getFileView(config.bucket, file.$id);
 
-      // Get preview image URL
-      const imageUrl = storage
-        .getFileView(config.bucket, file.$id)
-    
-
-      // Prepare final form data
       const formdata = {
         title: title,
         story: newsDescription,
@@ -93,6 +85,7 @@ const AddNews = () => {
         by: currentUser.name,
         time: new Date().toISOString(),
         aurthor_image: userAvatar,
+        UserId: currentUser.$id,
       };
 
       await db.createDocument(
@@ -152,13 +145,6 @@ const AddNews = () => {
       setNewsDescription(plainText);
     };
     quillRef.current.on("text-change", handler);
-
-    // return () => {
-    //   if (quillRef.current) {
-    //     quillRef.current.off("text-change", handler);
-    //     quillRef.current = null;
-    //   }
-    // };
   }, []);
 
   return (

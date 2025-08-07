@@ -77,7 +77,9 @@ export const addNews = async () => {
             tag: [],
             time: new Date().toISOString(),
             image: "",
-            aurthor_image: userAvatar
+            aurthor_image: userAvatar,
+            UserId: currentUser.$id,
+
         });
     } catch (error) {
         console.log("Error adding news:", error);
