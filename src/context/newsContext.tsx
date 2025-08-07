@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 
-import { Category, Comment } from "@/constant";
+import { Category } from "@/constant";
 import { account, config, db } from "@/lib/apprwrite";
 import type { CommentType, NewsDocument } from "@/types/types";
 import { Query, type Models } from "appwrite";
@@ -52,6 +52,7 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
     null
   );
   const [AdminNews, setAdminNews] = useState<NewsDocument[]>([]);
+
   const checkUser = async () => {
     try {
       const loggedInUser = await account.get();
@@ -75,16 +76,6 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
         Query.orderDesc("time"),
       ]);
       setNews(response.documents as unknown as NewsDocument[]);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const getComment = async () => {
-    setLoading(true);
-    try {
-      setComment(Comment);
     } catch (error) {
       console.log(error);
     } finally {
@@ -135,9 +126,6 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
       ]);
       setAdminNews(response.documents as unknown as NewsDocument[]);
 
-      if (response.documents.length === 0) {
-        toast.info("No news found for the current user.");
-      }
     } catch (error) {
       console.error("Error fetching message:", error);
       toast.error("Failed to fetch message. Please try again later.");
@@ -151,7 +139,6 @@ export function NewsProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    getComment();
     getNews();
     getCategory();
   }, []);

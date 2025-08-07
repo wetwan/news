@@ -14,20 +14,16 @@ export interface NewsType {
   image: string;
 }
 
-export interface CommentType {
-  name: string;
+export interface CommentType extends Models.Document {
+  comment: string;
   email: string;
-  time: {
-    seconds: number;
-    nanoseconds: number;
-  };
-  image: string;
-  Comment: string;
+  name: string;
   postId: string;
-  id: string;
+  time: string;
+  $id: string;
 }
 
-export interface NewsDocument  extends Models.Document {
+export interface NewsDocument extends Models.Document {
   $collectionId: string;
   $createdAt: string;
   $databaseId: string;

@@ -3,33 +3,47 @@ import { images } from "@/assets";
 import Comments from "@/components/Coments";
 import Comment from "@/components/comment";
 import { useNewsCreation } from "@/context/newsContext";
+import { config, db } from "@/lib/apprwrite";
 import type { CommentType, NewsDocument } from "@/types/types";
+import { Query } from "appwrite";
 import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
+import { toast } from "react-toastify";
 
 const NewsId = () => {
   const { id } = useParams();
-  const { news, loading, setLoading, comment } = useNewsCreation();
+  const { news, loading, setLoading, getMessage } = useNewsCreation();
   const [newData, setNewsdata] = useState<NewsDocument>();
   const [comm, setComm] = useState<CommentType[]>([]);
+
+  const getComment = async () => {
+    setLoading(true);
+    try {
+      const response = await db.listDocuments(config.database, config.comment, [
+        Query.equal("postId", id || ""),
+        Query.limit(100),
+        Query.orderDesc("time"),
+      ]);
+      setComm(response.documents as unknown as CommentType[]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getNewdata = async () => {
     setLoading(true);
     try {
       const find = news.find((t) => t.$id === id);
+      if (!find) {
+        toast.error("News not found");
+        return;
+      }
+
       setNewsdata(find);
-    } catch (error) {
-      console.log("error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const getComment = async () => {
-    setLoading(true);
-    try {
-      const find = comment.filter((t) => t.postId === id);
-      setComm(find);
+      await getMessage();
     } catch (error) {
       console.log("error:", error);
     } finally {
@@ -101,7 +115,7 @@ const NewsId = () => {
       <hr className="mt-10 bg-black" />
       <div className="mt-10">
         <h2 className="text-3xl font-bold mb-3">Comment</h2>
-        <Comments />
+        {newData && <Comments item={newData} getComment={getComment} />}
         <Comment item={comm} />
       </div>
     </div>

@@ -7,6 +7,7 @@ export const config = {
     user: import.meta.env.VITE_APPWRITE_USER_ID!,
     news: import.meta.env.VITE_APPWRITE_NEWS_ID!,
     bucket: import.meta.env.VITE_APPWRITE_BUCKET_ID!,
+    comment: import.meta.env.VITE_APPWRITE_COMMENT_ID!,
 
 };
 
